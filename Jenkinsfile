@@ -1,7 +1,5 @@
 pipeline {
-  agent {
-    label any
-  }
+  agent any
   environment {
     ORG = 'cb-kubecd'
     APP_NAME = 'mwm-golang-http'
