@@ -1,6 +1,6 @@
 pipeline {
   agent {
-    label "jenkins-go"
+    label any
   }
   environment {
     ORG = 'cb-kubecd'
