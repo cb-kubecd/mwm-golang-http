@@ -16,7 +16,6 @@ pipeline {
         HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()
       }
       steps {
-        container('go') {
           dir('/home/jenkins/go/src/github.com/cb-kubecd/mwm-golang-http') {
             checkout scm
             sh "make linux"
@@ -27,7 +26,6 @@ pipeline {
             sh "make preview"
             sh "jx preview --app $APP_NAME --dir ../.."
           }
-        }
       }
     }
     stage('Build Release') {
@@ -35,7 +33,6 @@ pipeline {
         branch 'master'
       }
       steps {
-        container('go') {
           dir('/home/jenkins/go/src/github.com/cb-kubecd/mwm-golang-http') {
             git 'https://github.com/cb-kubecd/mwm-golang-http.git'
 
@@ -46,7 +43,6 @@ pipeline {
             sh "export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml"
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
           }
-        }
       }
     }
     stage('Promote to Environments') {
@@ -54,7 +50,6 @@ pipeline {
         branch 'master'
       }
       steps {
-        container('go') {
           dir('/home/jenkins/go/src/github.com/cb-kubecd/mwm-golang-http/charts/mwm-golang-http') {
             sh "jx step changelog --version v\$(cat ../../VERSION)"
 
@@ -64,7 +59,6 @@ pipeline {
             // promote through all 'Auto' promotion Environments
             sh "jx promote -b --all-auto --timeout 1h --version \$(cat ../../VERSION)"
           }
-        }
       }
     }
   }
