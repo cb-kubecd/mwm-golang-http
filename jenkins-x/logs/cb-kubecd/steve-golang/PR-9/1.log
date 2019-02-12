@@ -1,0 +1,131 @@
+Step: build-step-credential-initializer:
+
+{"level":"warn","ts":1549974801.6210363,"logger":"fallback-logger","caller":"logging/config.go:65","msg":"Fetch GitHub commit ID from kodata failed: \"ref: refs/heads/test\" is not a valid GitHub commit ID"}
+{"level":"info","ts":1549974801.6221168,"logger":"fallback-logger","caller":"creds-init/main.go:40","msg":"Credentials initialized."}
+Step: build-step-git-source-0:
+
+{"level":"warn","ts":1549974802.3711407,"logger":"fallback-logger","caller":"logging/config.go:65","msg":"Fetch GitHub commit ID from kodata failed: \"ref: refs/heads/test\" is not a valid GitHub commit ID"}
+{"level":"info","ts":1549974803.630928,"logger":"fallback-logger","caller":"git-init/main.go:92","msg":"Successfully cloned \"https://github.com/cb-kubecd/steve-golang.git\" @ \"76a3ca06e70080e4316e18304416251ffe0fbeb0\" in path \"/workspace\""}
+Step: build-step-jenkins:
+
+Picked up _JAVA_OPTIONS: -Xmx400m
+Started
+Running in Durability level: PERFORMANCE_OPTIMIZED
+  20.682 [id=34]	WARNING	i.f.k.c.i.VersionUsageUtils#alert: The client is using resource type 'customresourcedefinitions' with unstable version 'v1beta1'
+[Pipeline] node
+Running on Jenkins in /tmp/jenkinsTests.tmp/jenkins6876519482791577984test/workspace/job
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withCredentials
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (CI Build and push snapshot)
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] dir
+Running in /home/jenkins/go/src/github.com/cb-kubecd/steve-golang
+[Pipeline] {
+[Pipeline] checkout
+[Pipeline] sh
++ make linux
+CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO15VENDOREXPERIMENT=1 go build -ldflags '' -o bin/steve-golang main.go
+[Pipeline] sh
++ export VERSION=0.0.0-SNAPSHOT-PR-9-1
++ skaffold build -f skaffold.yaml
+time="2019-02-12T12:34:15Z" level=warning msg="config version (skaffold/v1beta2) out of date: upgrading to latest (skaffold/v1beta3)"
+Starting build...
+Building [changeme]...
+Sending build context to Docker daemon  525.8kBSending build context to Docker daemon  6.502MB
+Step 1/4 : FROM scratch
+ ---> 
+Step 2/4 : EXPOSE 8080
+ ---> Using cache
+ ---> d1a007f0f3eb
+Step 3/4 : ENTRYPOINT /steve-golang
+ ---> Using cache
+ ---> c92d1459312a
+Step 4/4 : COPY ./bin/ /
+ ---> Using cache
+ ---> 547d0a45a941
+Successfully built 547d0a45a941
+The push refers to a repository [10.75.242.126:5000/cb-kubecd/steve-golang]
+af778f24a863: Preparing
+af778f24a863: Layer already exists
+0.0.0-SNAPSHOT-PR-9-1: digest: sha256:92a790b337cd6c85b47fdcc7a72a83ecb420280ff3e845a587390a8810b62923 size: 528
+Build complete in 302.167557ms
+Starting test...
+Test complete in 3.984µs
+changeme -> 10.75.242.126:5000/cb-kubecd/steve-golang:0.0.0-SNAPSHOT-PR-9-1
+[Pipeline] sh
++ jx step post build --image 10.75.242.126:5000/cb-kubecd/steve-golang:0.0.0-SNAPSHOT-PR-9-1
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] dir
+Running in /home/jenkins/go/src/github.com/cb-kubecd/steve-golang/charts/preview
+[Pipeline] {
+[Pipeline] sh
++ make preview
+sed -i -e "s/version:.*/version: 0.0.0-SNAPSHOT-PR-9-1/" Chart.yaml
+sed -i -e "s/version:.*/version: 0.0.0-SNAPSHOT-PR-9-1/" ../*/Chart.yaml
+sed -i -e "s|repository:.*|repository: 10.75.242.126:5000\/cb-kubecd\/steve-golang|" values.yaml
+sed -i -e "s/tag:.*/tag: 0.0.0-SNAPSHOT-PR-9-1/" values.yaml
+echo "  version: 0.0.0-SNAPSHOT-PR-9-1" >> requirements.yaml
+jx step helm build
+No $CHART_REPOSITORY defined so using the default value of: http://jenkins-x-chartmuseum:8080
+Adding missing Helm repo: releases http://jenkins-x-chartmuseum:8080
+Successfully added Helm repository releases.
+Adding missing Helm repo: jenkins-x http://chartmuseum.jenkins-x.io
+Successfully added Helm repository jenkins-x.
+[Pipeline] sh
++ jx preview --app steve-golang --dir ../..
+Creating a preview
+Commit author email is empty for: 76a3ca06e70080e4316e18304416251ffe0fbeb0
+Looking for commits in: /home/jenkins/go/src/github.com/cb-kubecd/steve-golang/
+Created environment cb-kubecd-steve-golang-pr-9
+Namespace jx-cb-kubecd-steve-golang-pr-9 created 
+ expose:
+  Annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded
+  config:
+    domain: jx.shared.dev.core.beescloud.com
+    exposer: Ingress
+    http: "true"
+preview:
+  image:
+    repository: 10.75.242.126:5000/cb-kubecd/steve-golang
+    tag: 0.0.0-SNAPSHOT-PR-9-1
+Creating missing sourcerepository object cb-kubecd-cb-kubecd-steve-golang-pr-9-1
+Failed to update PipelineActivities cb-kubecd-steve-golang-pr-9-1: the namespace of the object (jx-cb-kubecd-steve-golang-pr-9) does not match the namespace on the request (jx)
+Preview application is now available at: http://steve-golang.jx-cb-kubecd-steve-golang-pr-9.jx.shared.dev.core.beescloud.com
+
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Release)
+Stage "Build Release" skipped due to when conditional
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Promote to Environments)
+Stage "Promote to Environments" skipped due to when conditional
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
