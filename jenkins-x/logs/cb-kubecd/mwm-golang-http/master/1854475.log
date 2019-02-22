@@ -1,6 +1,5 @@
 Step: build-step-credential-initializer:
 
-failed to get container status {"" ""}: rpc error: code = OutOfRange desc = EOF
 Step: build-step-git-source-0:
 
 failed to get container status {"" ""}: rpc error: code = OutOfRange desc = EOF
